@@ -40,10 +40,9 @@ class App extends React.Component {
       })
     }
     console.log(this.state);
-
+    console.log("hello" === "bye" ? 'yo' : 'no')
   }
 
-  
   
   render() {
     return (
@@ -53,14 +52,14 @@ class App extends React.Component {
           {this.state.clickedEmotion}
         </p>
         
-        <button onClick={() => this.selectemotion('angry')} className="button1" style={{backgroundColor: "#e6fff9", color: "black"}} type="button">Angry</button><br/>
-        <button onClick={() => this.selectemotion('bad')} className="button1" style={{backgroundColor: "#b3ffec", color: "black"}} type="button">Bad</button><br/>
-        <button onClick={() => this.selectemotion('disgusted')} className="button1" style={{backgroundColor: "#80ffe5", color: "black"}} type="button">Disgusted</button><br/>
-        <button onClick={() => this.selectemotion('fearful')} className="button1" style={{backgroundColor: "#4dffd2", color: "black"}} type="button">Fearful</button><br/>
-        <button onClick={() => this.selectemotion('happy')} className="button1" style={{backgroundColor: "#00e6ac"}} type="button">Happy</button><br/>
-        <button onClick={() => this.selectemotion('sad')} className="button1" style={{backgroundColor: "#00cc99"}} type="button">Sad</button><br/>
-        <button onClick={() => this.selectemotion('surprised')} className="button1" style={{backgroundColor: "#009973"}} type="button">Surprised</button><br/>
-        <button onClick={() => this.selectemotion('indifferent')} className="button1" style={{backgroundColor: "#00664d"}} type="button">Indifferent</button><br/>
+        <button onClick={() => this.selectemotion('angry')} className="button1" style={{backgroundColor: this.state.clickedEmotion === null || this.state.clickedEmotion === 'angry' ? "#e6fff9" : "#d9d9d9", color: this.state.clickedEmotion === null || this.state.clickedEmotion === 'angry' ? "black" : "white"}} type="button">Angry</button><br/>
+        <button onClick={() => this.selectemotion('bad')} className="button1" style={{backgroundColor: this.state.clickedEmotion === null || this.state.clickedEmotion === 'bad' ? "#b3ffec" : "#d9d9d9", color: this.state.clickedEmotion === null || this.state.clickedEmotion === 'bad' ? "black" : "white"}} type="button">Bad</button><br/>
+        <button onClick={() => this.selectemotion('disgusted')} className="button1" style={{backgroundColor: this.state.clickedEmotion === null || this.state.clickedEmotion === 'disgusted' ? "#80ffe5" : "#d9d9d9", color: this.state.clickedEmotion === null || this.state.clickedEmotion === 'disgusted' ? "black" : "white"}} type="button">Disgusted</button><br/>
+        <button onClick={() => this.selectemotion('fearful')} className="button1" style={{backgroundColor: this.state.clickedEmotion === null || this.state.clickedEmotion === 'fearful' ? "#4dffd2" : "#d9d9d9", color: this.state.clickedEmotion === null || this.state.clickedEmotion === 'fearful' ? "black" : "white"}} type="button">Fearful</button><br/>
+        <button onClick={() => this.selectemotion('happy')} className="button1" style={{backgroundColor: this.state.clickedEmotion === null || this.state.clickedEmotion === 'happy' ? "#00e6ac" : "#d9d9d9"}} type="button">Happy</button><br/>
+        <button onClick={() => this.selectemotion('sad')} className="button1" style={{backgroundColor: this.state.clickedEmotion === null || this.state.clickedEmotion === 'sad' ? "#00cc99" : "#d9d9d9"}} type="button">Sad</button><br/>
+        <button onClick={() => this.selectemotion('surprised')} className="button1" style={{backgroundColor: this.state.clickedEmotion === null || this.state.clickedEmotion === 'surprised' ? "#009973" : "#d9d9d9"}} type="button">Surprised</button><br/>
+        <button onClick={() => this.selectemotion('indifferent')} className="button1" style={{backgroundColor: this.state.clickedEmotion === null || this.state.clickedEmotion === 'indifferent' ? "#00664d" : "#d9d9d9"}} type="button">Indifferent</button><br/>
         
         <p>
         On a scale of 1 to 5, how intensely did you feel that?
