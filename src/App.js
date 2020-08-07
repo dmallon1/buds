@@ -1,5 +1,4 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 
 class App extends React.Component {
@@ -11,25 +10,7 @@ class App extends React.Component {
     };
   }
 
-  componentDidMount() {
-    // this.timerID = setInterval(
-    //   () => this.tick(),
-    //   1000
-    // );
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.timerID);
-  }
-
-  tick() {
-    this.setState({
-      date: new Date()
-    });
-  }
-
   selectemotion(emotion) {
-    console.log('michelle clicked ' + emotion);
     if (typeof emotion === 'string') {
       this.setState({
         clickedEmotion: emotion
@@ -39,7 +20,6 @@ class App extends React.Component {
         clickedIntensity: emotion
       })
     }
-    console.log(this.state);
   }
 
   
@@ -48,7 +28,6 @@ class App extends React.Component {
       <div className="App">
         <p>
           Good morning, Michelle. How are you feeling today?
-          {this.state.clickedEmotion}
         </p>
         
         <button onClick={() => this.selectemotion('angry')} className="button1" style={{backgroundColor: this.state.clickedEmotion === null || this.state.clickedEmotion === 'angry' ? "#e6fff9" : "#d9d9d9", color: this.state.clickedEmotion === null || this.state.clickedEmotion === 'angry' ? "black" : "white"}} type="button">Angry</button><br/>
@@ -69,8 +48,6 @@ class App extends React.Component {
         <button onClick={() => this.selectemotion(4)} className="button2" style={{backgroundColor: this.state.clickedIntensity === null || this.state.clickedIntensity === 4 ? "#4dffd2" : "#d9d9d9"}} type="button">4</button>
         <button onClick={() => this.selectemotion(5)} className="button2" style={{backgroundColor: this.state.clickedIntensity === null || this.state.clickedIntensity === 5 ? "#00e6ac" : "#d9d9d9"}} type="button">5</button>
        
-
-
       </div>
     );
   }
