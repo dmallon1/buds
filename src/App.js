@@ -63,11 +63,11 @@ class App extends React.Component {
         <p>
         On a scale of 1 to 5, how intensely did you feel that?
         </p>
-        <button onClick={() => this.selectemotion(1)} className="button2" style={{backgroundColor: "#e6fff9"}} type="button">1</button>
-        <button onClick={() => this.selectemotion(2)} className="button2" style={{backgroundColor: "#b3ffec"}} type="button">2</button>
-        <button onClick={() => this.selectemotion(3)} className="button2" style={{backgroundColor: "#b3ffec"}} type="button">3</button>
-        <button onClick={() => this.selectemotion(4)} className="button2" style={{backgroundColor: "#4dffd2"}} type="button">4</button>
-        <button onClick={() => this.selectemotion(5)} className="button2" style={{backgroundColor: "#00e6ac"}} type="button">5</button>
+        <button onClick={() => this.selectemotion(1)} className="button2" style={{backgroundColor: this.state.clickedIntensity === null || this.state.clickedIntensity === 1 ? "#e6fff9": "#d9d9d9"}} type="button">1</button>
+        <button onClick={() => this.selectemotion(2)} className="button2" style={{backgroundColor: this.state.clickedIntensity === null || this.state.clickedIntensity === 2 ? "#b3ffec" : "#d9d9d9"}} type="button">2</button>
+        <button onClick={() => this.selectemotion(3)} className="button2" style={{backgroundColor: this.state.clickedIntensity === null || this.state.clickedIntensity === 3 ? "#80ffe5" : "#d9d9d9"}} type="button">3</button>
+        <button onClick={() => this.selectemotion(4)} className="button2" style={{backgroundColor: this.state.clickedIntensity === null || this.state.clickedIntensity === 4 ? "#4dffd2" : "#d9d9d9"}} type="button">4</button>
+        <button onClick={() => this.selectemotion(5)} className="button2" style={{backgroundColor: this.state.clickedIntensity === null || this.state.clickedIntensity === 5 ? "#00e6ac" : "#d9d9d9"}} type="button">5</button>
        
 
 
