@@ -7,7 +7,8 @@ class App extends React.Component {
     this.state = {
       clickedEmotion: null,
       clickedIntensity: null,
-      clickedDone: false
+      clickedDone: false,
+      writtenText: ""
     };
   }
 
@@ -22,16 +23,31 @@ class App extends React.Component {
       })
     }
   }
-  
+
   selectdone() {
     this.setState({
       clickedDone: true
     })
   }
   
-  render() {
-    return (
-      <div className="App">
+  written() {
+    this.setState({
+      writtenText: true
+    })
+  }
+
+  handleChange(event) {
+    this.setState({writtenText: event.target.value});
+  }
+
+  handleSubmit(event) {
+    console.log('writtenText: ' + this.state.writtenText);
+    event.preventDefault();
+  }
+
+  firstPage() {
+    return ( 
+    <div>
         <p>
           Good morning, Michelle. How are you feeling today?
         </p>
@@ -57,6 +73,31 @@ class App extends React.Component {
        <p>
        <button onClick={() => this.selectdone()} className="button3" style={{backgroundColor: "#d9d9d9"}} type="button">Done</button>
        </p>
+      </div>
+    )
+  }
+  
+  secondPage() {
+    return (
+      <div>
+        <p>
+        Write about what made you feel {this.state.clickedEmotion} of intensity level {this.state.clickedIntensity} today:
+
+        </p>
+        <label>
+          <textarea type="text" value={this.state.writtenText} onChange={(e) => this.handleChange(e)} rows="10" cols="35"
+             />
+        </label> <br/>
+        <button onClick={(e) => this.handleSubmit(e)} className="button3" style={{backgroundColor: "#d9d9d9"}} type="button">Done</button>
+      </div>
+    )
+  }
+
+  render() {
+    return (
+      <div className="App">
+        {!this.state.clickedDone && this.firstPage()}
+        {this.state.clickedDone && this.secondPage()}
       </div>
     );
   }
