@@ -6,7 +6,8 @@ class App extends React.Component {
     super(props);
     this.state = {
       clickedEmotion: null,
-      clickedIntensity: null
+      clickedIntensity: null,
+      clickedDone: false
     };
   }
 
@@ -21,7 +22,12 @@ class App extends React.Component {
       })
     }
   }
-
+  
+  selectdone() {
+    this.setState({
+      clickedDone: true
+    })
+  }
   
   render() {
     return (
@@ -48,6 +54,9 @@ class App extends React.Component {
         <button onClick={() => this.selectemotion(4)} className="button2" style={{backgroundColor: this.state.clickedIntensity === null || this.state.clickedIntensity === 4 ? "#4dffd2" : "#d9d9d9"}} type="button">4</button>
         <button onClick={() => this.selectemotion(5)} className="button2" style={{backgroundColor: this.state.clickedIntensity === null || this.state.clickedIntensity === 5 ? "#00e6ac" : "#d9d9d9"}} type="button">5</button>
        
+       <p>
+       <button onClick={() => this.selectdone()} className="button3" style={{backgroundColor: "#d9d9d9"}} type="button">Done</button>
+       </p>
       </div>
     );
   }
