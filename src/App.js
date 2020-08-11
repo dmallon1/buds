@@ -16,24 +16,18 @@ class App extends React.Component {
     if (typeof emotion === 'string') {
       this.setState({
         clickedEmotion: emotion
-      })
+      });
     } else {
       this.setState({
         clickedIntensity: emotion
-      })
+      });
     }
   }
 
-  selectdone() {
+  selectDone() {
     this.setState({
       clickedDone: true
-    })
-  }
-  
-  written() {
-    this.setState({
-      writtenText: true
-    })
+    });
   }
 
   handleChange(event) {
@@ -71,10 +65,10 @@ class App extends React.Component {
         <button onClick={() => this.selectemotion(5)} className="button2" style={{backgroundColor: this.state.clickedIntensity === null || this.state.clickedIntensity === 5 ? "#00e6ac" : "#d9d9d9"}} type="button">5</button>
        
        <p>
-       <button onClick={() => this.selectdone()} className="button3" style={{backgroundColor: "#d9d9d9"}} type="button">Done</button>
+        <button onClick={() => this.selectDone()} className="button3" style={{backgroundColor: "#d9d9d9"}} type="button">Done</button>
        </p>
       </div>
-    )
+    );
   }
   
   secondPage() {
@@ -82,15 +76,13 @@ class App extends React.Component {
       <div>
         <p>
         Write about what made you feel {this.state.clickedEmotion} of intensity level {this.state.clickedIntensity} today:
-
         </p>
         <label>
-          <textarea type="text" value={this.state.writtenText} onChange={(e) => this.handleChange(e)} rows="10" cols="35"
-             />
+          <textarea type="text" value={this.state.writtenText} onChange={(e) => this.handleChange(e)} rows="10" cols="35"/>
         </label> <br/>
         <button onClick={(e) => this.handleSubmit(e)} className="button3" style={{backgroundColor: "#d9d9d9"}} type="button">Done</button>
       </div>
-    )
+    );
   }
 
   render() {
@@ -101,7 +93,6 @@ class App extends React.Component {
       </div>
     );
   }
-  
 }
 
 export default App;
