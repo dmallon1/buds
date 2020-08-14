@@ -3,5 +3,5 @@ CREATE TABLE entries (
 	emotion VARCHAR ( 50 ) NOT NULL,
 	intensity INT NOT NULL,
 	entry VARCHAR ( 2048 ) UNIQUE NOT NULL,
-	created TIMESTAMP NOT NULL
+	created TIMESTAMP NOT NULL DEFAULT NOW()
 );

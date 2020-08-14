@@ -40,10 +40,11 @@ const createEntry = (req, res) => {
     pool.query('INSERT INTO entries (emotion, intensity, entry) VALUES ($1, $2, $3)',
             [emotion, intensity, entry], (error, results) => {
         if (error) {
+            res.status(400).send("error");
             throw error
         }
         console.log(results)
-        res.status(201).send(`User added with ID: ${results.rows}`)
+        res.status(201).send(`Added ${results.rowCount} row(s)`);
     })
 }
 
