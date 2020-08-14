@@ -10,7 +10,7 @@ class App extends React.Component {
       clickedEmotion: null,
       clickedIntensity: null,
       currentPage: 1,
-      writtenText: ""
+      writtenText: "",
     };
     this.entries = [
       {
@@ -28,11 +28,11 @@ class App extends React.Component {
 
   navigationBar() {
     return (
-        <div class="row align-items-center" style={{backgroundColor: "#d9d9d9", border:"2px solid black", height:"40px"}}>
-          <div class="col">
+        <div className="row align-items-center" style={{backgroundColor: "#d9d9d9", border:"2px solid black", height:"40px"}}>
+          <div className="col" style={{fontWeight: this.state.currentPage !== 3 ? "bold" : "" }}>
           Today's Feeling
           </div>
-          <div class="col">
+          <div className="col" style={{fontWeight: this.state.currentPage === 3 ? "bold" : "" }}>
           Journal Log
           </div>
         </div>
