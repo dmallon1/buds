@@ -1,5 +1,7 @@
 import React from 'react';
 import './App.css';
+// const URL = "https://guarded-depths-61972.herokuapp.com"
+// const localURL = "http://localhost:5000/entries"
 
 class App extends React.Component {
   constructor(props) {
@@ -22,7 +24,25 @@ class App extends React.Component {
         emotion: 'Sad'
       },
     ]
+  }  
+
+  navigationBar() {
+    return (
+        <div class="row align-items-center" style={{backgroundColor: "#d9d9d9", border:"2px solid black", height:"40px"}}>
+          <div class="col-sm">
+          Today's Feeling
+          </div>
+          <div class="col-sm">
+          Journal Log
+          </div>
+        </div>
+    )
   }
+  
+  
+  // componentDidMount() {
+  //   fetch(localURL).then(r => r.json().then(data => console.log(data)))
+  // }
 
   selectemotion(emotion) {
     if (typeof emotion === 'string') {
@@ -120,6 +140,7 @@ class App extends React.Component {
   render() {
     return (
       <div className="App">
+        {this.navigationBar()}
         {this.state.currentPage === 1 && this.firstPage()}
         {this.state.currentPage === 2 && this.secondPage()}
         {this.state.currentPage === 3 && this.thirdPage(this.entries)}
