@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
-// const URL = "https://guarded-depths-61972.herokuapp.com"
-// const localURL = "http://localhost:5000/entries"
+const URL = "https://guarded-depths-61972.herokuapp.com"
+const localURL = "http://localhost:5000/entries"
 
 class App extends React.Component {
   constructor(props) {
@@ -9,21 +9,10 @@ class App extends React.Component {
     this.state = {
       clickedEmotion: null,
       clickedIntensity: null,
-      currentPage: 1,
+      currentPage: 3,
       writtenText: "",
+      entries: null,
     };
-    this.entries = [
-      {
-        timestamp: '4/7/20',
-        entry_text: 'hey it\'s michelle!!',
-        emotion: 'Bad'
-      },
-      {
-        timestamp: '2/2/20',
-        entry_text: 'hello world!',
-        emotion: 'Sad'
-      },
-    ]
   }
 
   navigationBar() {
@@ -39,10 +28,14 @@ class App extends React.Component {
     )
   }
 
-
-  // componentDidMount() {
-  //   fetch(localURL).then(r => r.json().then(data => console.log(data)))
-  // }
+  componentDidMount() {
+    fetch(localURL).then(r => r.json().then(data => {
+      console.log(data.results);
+      this.setState({
+        entries: data.results
+      })
+    }));
+  }
 
   selectemotion(emotion) {
     if (typeof emotion === 'string') {
@@ -66,6 +59,17 @@ class App extends React.Component {
     this.setState({writtenText: event.target.value});
   }
 
+  loginPage() {
+    return(
+      <div>
+        <p>
+          Sign Up
+        </p>
+        Hi, what's your name?
+      </div>
+    )
+  }
+  
   firstPage() {
     return (
     <div>
@@ -116,7 +120,7 @@ class App extends React.Component {
   a list with (timestamp, emotion, intensity, entry_text)
   */
   thirdPage(entries) {
-    if (entries.length === 0) {
+    if (entries === null || entries.length === 0) {
       return "Journal Log empty";
     } else {
       return(
@@ -126,9 +130,9 @@ class App extends React.Component {
           </p>
           {entries.map((entry, i) =>
             <div key={i}>
-              {entry.timestamp} - {entry.emotion}
+              {entry.new_created} - {entry.emotion}
                 <div style={{border:"2px solid black", height:"100px", width: "400px", margin: "auto"}}>
-                  {entry.entry_text}
+                  {entry.entry}
                 </div>
             </div>
           )}
@@ -143,7 +147,7 @@ class App extends React.Component {
         {this.navigationBar()}
         {this.state.currentPage === 1 && this.firstPage()}
         {this.state.currentPage === 2 && this.secondPage()}
-        {this.state.currentPage === 3 && this.thirdPage(this.entries)}
+        {this.state.currentPage === 3 && this.thirdPage(this.state.entries)}
       </div>
     );
   }
