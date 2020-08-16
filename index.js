@@ -1,4 +1,5 @@
 const express = require('express')
+const exphbs = require('express-handlebars');
 const path = require('path')
 const PORT = process.env.PORT || 5000
 const { Pool } = require('pg');
@@ -91,7 +92,10 @@ const doLogin = (req, res) => {
         res.redirect('/');
     } else {
         res.cookie('AuthToken', null);
-        res.status(400).send('bad combo');
+        res.render('login', {
+            message: 'Invalid username or password',
+            messageClass: 'alert-danger'
+        });
     }
 }
 
@@ -101,7 +105,10 @@ const doRegister = (req, res) => {
     if (password === confirmPassword) {
         if (users.find(user => user.email === email)) {
 
-            res.status(400).send('user already registered');
+            res.render('register', {
+                message: 'User already registered.',
+                messageClass: 'alert-danger'
+            });
             return;
         }
 
@@ -114,33 +121,44 @@ const doRegister = (req, res) => {
             password: hashedPassword
         });
 
-        res.status(201).send('Registration Complete. Please login to continue.');
+        res.render('login', {
+            message: 'Registration Complete. Please login to continue.',
+            messageClass: 'alert-success'
+        });
     } else {
-        res.status(400).send('passwords do not match');
+        res.render('register', {
+            message: 'Password does not match.',
+            messageClass: 'alert-danger'
+        });
     }
 };
 
 express()
-  .use('/static', express.static(path.join(__dirname, 'public')))
-  .use(express.static(path.join(__dirname, 'build')))
-  .use(bodyParser.json())
-  .use(cookieParser())
-  .use((req, res, next) => {
-    const authToken = req.cookies['AuthToken'];
-    req.user = authTokens[authToken];
-    next();
-  })
-  .get('/login', (req, res) => res.send('login'))
-  .post('/login', doLogin)
-  .post('/register', doRegister)
-  .get('/protected', (req, res) => {
-    if (req.user) {
-        res.send('protected');
-    } else {
-        res.status(403).send('Please login to continue');
-    }
-  })
-  .post('/users', createUser)
-  .post('/entries', createEntry)
-  .get('/entries', getEntries) // TODO: check user
-  .listen(PORT, () => console.log(`Listening on ${ PORT }`))
+    .engine('hbs', exphbs({
+        extname: '.hbs'
+    }))
+    .set('view engine', 'hbs')
+    .use(cookieParser())
+    .use(bodyParser.urlencoded({ extended: true }))
+    .get('/login', (req, res) => res.render('login'))
+    .post('/login', doLogin)
+    .get('/register', (req, res) => res.render('register'))
+    .post('/register', doRegister)
+    .use((req, res, next) => {
+        const authToken = req.cookies['AuthToken'];
+        req.user = authTokens[authToken];
+        if (req.user) {
+            next();
+        } else {
+            res.render('login', {
+                message: 'Please login to continue',
+                messageClass: 'alert-danger'
+            });
+        }
+    })
+    .use(bodyParser.json())
+    .use(express.static(path.join(__dirname, 'build')))
+    .post('/users', createUser)
+    .post('/entries', createEntry)
+    .get('/entries', getEntries)
+    .listen(PORT, () => console.log(`Listening on ${ PORT }`))
