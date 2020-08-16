@@ -4,7 +4,6 @@ const PROD_URL = "https://guarded-depths-61972.herokuapp.com/entries"
 const LOCAL_URL = "http://localhost:5000/entries"
 const URL = process.env.REACT_APP_IS_LOCAL === "1" ? LOCAL_URL : PROD_URL;
 
-console.log('url ' + URL, process.env.REACT_APP_IS_LOCAL);
 
 class App extends React.Component {
   constructor(props) {
@@ -33,7 +32,6 @@ class App extends React.Component {
 
   componentDidMount() {
     fetch(URL).then(r => r.json().then(data => {
-      console.log(data.results);
       this.setState({
         entries: data.results
       })
