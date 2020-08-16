@@ -9,16 +9,6 @@ const crypto = require('crypto');
 
 const authTokens = {};
 
-const users = [
-    {
-        firstName: 'John',
-        lastName: 'Doe',
-        email: 'johndoe@email.com',
-        // This is the SHA256 hash for value of `password`
-        password: 'XohImNooBHFR0OVvjcYpJ3NgPQ1qq73WKhHvch0VQtg='
-    }
-];
-
 const getHashedPassword = (password) => {
     const sha256 = crypto.createHash('sha256');
     const hash = sha256.update(password).digest('base64');
@@ -79,58 +69,79 @@ const doLogin = (req, res) => {
     const { email, password } = req.body;
     const hashedPassword = getHashedPassword(password);
 
-    const user = users.find(u => {
-        return u.email === email && hashedPassword === u.password
+    getUserOrNull(email, hashedPassword).then(user => {
+        if (user) {
+            const authToken = generateAuthToken();
+
+            authTokens[authToken] = email;
+
+            res.cookie('AuthToken', authToken);
+            res.redirect('/');
+        } else {
+            res.cookie('AuthToken', null);
+            res.render('login', {
+                message: 'Invalid username or password',
+                messageClass: 'alert-danger'
+            });
+        }
     });
-
-    if (user) {
-        const authToken = generateAuthToken();
-
-        authTokens[authToken] = email;
-
-        res.cookie('AuthToken', authToken);
-        res.redirect('/');
-    } else {
-        res.cookie('AuthToken', null);
-        res.render('login', {
-            message: 'Invalid username or password',
-            messageClass: 'alert-danger'
-        });
-    }
 }
+
+const getUserOrNull = (email, password) => {
+    const userQuery = 'SELECT * FROM users WHERE email = $1' + (password ? ' AND password = $2' : '');
+    const params = password ? [email, password] : [email];
+    return pool.query(userQuery, params)
+        .then(res => {
+            if (res.rows.length) {
+                return res.rows[0];
+            }
+            return null;
+        })
+        .catch(err =>
+            setImmediate(() => {
+                throw err
+            })
+        )
+};
 
 const doRegister = (req, res) => {
     const { email, firstName, lastName, password, confirmPassword } = req.body;
 
     if (password === confirmPassword) {
-        if (users.find(user => user.email === email)) {
-
-            res.render('register', {
-                message: 'User already registered.',
-                messageClass: 'alert-danger'
-            });
-            return;
-        }
-
-        const hashedPassword = getHashedPassword(password);
-
-        users.push({
-            firstName,
-            lastName,
-            email,
-            password: hashedPassword
-        });
-
-        res.render('login', {
-            message: 'Registration Complete. Please login to continue.',
-            messageClass: 'alert-success'
-        });
+        getUserOrNull(email).then(user => {
+            if (user) {
+                res.render('register', {
+                    message: 'User already registered.',
+                    messageClass: 'alert-danger'
+                });
+                return;
+            } else {
+                const hashedPassword = getHashedPassword(password);
+                writeNewUserToDB(email, firstName, hashedPassword).then(dbResult => {
+                    const authToken = generateAuthToken();
+                    authTokens[authToken] = email;
+                    res.cookie('AuthToken', authToken);
+                    res.redirect('/');
+                });
+            }
+        })
     } else {
         res.render('register', {
             message: 'Password does not match.',
             messageClass: 'alert-danger'
         });
     }
+};
+
+const writeNewUserToDB = (email, firstName, hashedPassword) => {
+    return pool.query('INSERT INTO users (email, first_name, password) VALUES ($1, $2, $3)',
+            [email, firstName, hashedPassword])
+        .then(res => true)
+        .catch(err =>
+            setImmediate(() => {
+                throw err;
+            })
+        );
 };
 
 express()
@@ -140,6 +151,7 @@ express()
     .set('view engine', 'hbs')
     .use(cookieParser())
     .use(bodyParser.urlencoded({ extended: true }))
+    .use(bodyParser.json())
     .get('/login', (req, res) => res.render('login'))
     .post('/login', doLogin)
     .get('/register', (req, res) => res.render('register'))
@@ -156,7 +168,6 @@ express()
             });
         }
     })
-    .use(bodyParser.json())
     .use(express.static(path.join(__dirname, 'build')))
     .get('/entries', getEntries)
     .post('/entries', createEntry)
