@@ -19,11 +19,11 @@ class App extends React.Component {
 
   navigationBar() {
     return (
-        <div className="row align-items-center" style={{backgroundColor: "#d9d9d9", border:"2px solid black", height:"40px"}}>
-          <div className="col" style={{fontWeight: this.state.currentPage !== 3 ? "bold" : "" }}>
+        <div className="row align-items-center" style={{cursor: "pointer", backgroundColor: "#d9d9d9", border:"2px solid black", height:"40px"}}>
+          <div onClick={() => this.setState({currentPage: 1})} className="col" style={{fontWeight: this.state.currentPage !== 3 ? "bold" : "" }}>
           Today's Feeling
           </div>
-          <div className="col" style={{fontWeight: this.state.currentPage === 3 ? "bold" : "" }}>
+          <div onClick={() => this.setState({currentPage: 3})} className="col" style={{fontWeight: this.state.currentPage === 3 ? "bold" : "" }}>
           Journal Log
           </div>
         </div>
