@@ -26,24 +26,11 @@ const pool = new Pool({
   }
 });
 
-const createUser = (request, response) => {
-    const { name } = request.body
-
-    pool.query('INSERT INTO test_table (name) VALUES ($1)', [name], (error, results) => {
-        if (error) {
-            throw error
-        }
-        console.log(results)
-        response.status(201).send(`User added with ID: ${results.rows}`)
-    })
-}
-
 const getEntries = (req, res) => {
-    pool.query('SELECT * FROM entries ', (error, results) => {
+    pool.query('SELECT * FROM entries WHERE user_id = $1', [req.user], (error, results) => {
         if (error) {
             throw error
         }
-        console.log(results)
         const d_results = { 'results': (results) ? results.rows : null};
         res.status(200).send(d_results);
     })
@@ -54,13 +41,12 @@ const createEntry = (req, res) => {
         return res.status(400).send("not logged in");
     }
     const {emotion, intensity, entry} = req.body;
-    pool.query('INSERT INTO entries (emotion, intensity, entry) VALUES ($1, $2, $3)',
-            [emotion, intensity, entry], (error, results) => {
+    pool.query('INSERT INTO entries (emotion, intensity, entry, user_id) VALUES ($1, $2, $3, $4)',
+            [emotion, intensity, entry, req.user], (error, results) => {
         if (error) {
             res.status(400).send("error");
             throw error
         }
-        console.log(results)
         res.status(201).send(`Added ${results.rowCount} row(s)`);
     })
 }
@@ -73,7 +59,7 @@ const doLogin = (req, res) => {
         if (user) {
             const authToken = generateAuthToken();
 
-            authTokens[authToken] = email;
+            authTokens[authToken] = user.id;
 
             res.cookie('AuthToken', authToken);
             res.redirect('/');
@@ -136,7 +122,9 @@ const doRegister = (req, res) => {
 const writeNewUserToDB = (email, firstName, hashedPassword) => {
     return pool.query('INSERT INTO users (email, first_name, password) VALUES ($1, $2, $3)',
             [email, firstName, hashedPassword])
-        .then(res => true)
+        .then(res => {
+            return true;
+        })
         .catch(err =>
             setImmediate(() => {
                 throw err;
