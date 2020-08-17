@@ -47,7 +47,7 @@ const createEntry = (req, res) => {
             res.status(400).send("error");
             throw error
         }
-        res.status(201).send(`Added ${results.rowCount} row(s)`);
+        res.status(201).send({result: `Added ${results.rowCount} row(s)`});
     })
 }
 
