@@ -31,6 +31,10 @@ class App extends React.Component {
   }
 
   componentDidMount() {
+    this.refreshData()
+  }
+
+  refreshData() {
     fetch(URL).then(r => r.json().then(data => {
       this.setState({
         entries: data.results
@@ -51,6 +55,18 @@ class App extends React.Component {
   }
 
   selectDone() {
+    if ( this.state.currentPage === 2) {
+      const payload = {
+        emotion: this.state.clickedEmotion,
+        intensity: this.state.clickedIntensity,
+        entry: this.state.writtenText
+      }
+      this.postData(URL, payload)
+        .then(data => {
+          console.log(data); // JSON data parsed by `data.json()` call
+          this.refreshData()
+        });
+    }
     this.setState({
       currentPage: this.state.currentPage + 1
     });
@@ -152,6 +168,25 @@ class App extends React.Component {
       </div>
     );
   }
+
+  postData(url = '', data = {}) {
+    // Default options are marked with *
+    return fetch(url, {
+      method: 'POST', // *GET, POST, PUT, DELETE, etc.
+      mode: 'cors', // no-cors, *cors, same-origin
+      cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+      credentials: 'same-origin', // include, *same-origin, omit
+      headers: {
+        'Content-Type': 'application/json'
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      redirect: 'follow', // manual, *follow, error
+      referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+      body: JSON.stringify(data) // body data type must match "Content-Type" header
+    }).then(res => res.json());
+}
+  
+  
 }
 
 export default App;
