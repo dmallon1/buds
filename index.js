@@ -77,6 +77,13 @@ const createEntry = (req, res) => {
     })
 }
 
+const getCurrentUserName = (req, res) => {
+    pool.query('SELECT first_name FROM users WHERE id = $1', [req.user], (error, results) => {
+        if (error) throw error;
+        res.status(200).send(results.rows[0]);
+    });
+};
+
 const doLogin = (req, res) => {
     const { email, password } = req.body;
     const hashedPassword = getHashedPassword(password);
@@ -185,4 +192,5 @@ express()
     .use(express.static(path.join(__dirname, 'build')))
     .get('/entries', getEntries)
     .post('/entries', createEntry)
+    .get('/users', getCurrentUserName)
     .listen(PORT, () => console.log(`Listening on ${ PORT }`))
