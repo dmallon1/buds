@@ -86,7 +86,7 @@ const doLogin = (req, res) => {
             const authToken = generateAuthToken();
 
             authTokens[authToken] = user.id;
-
+            writeNewTokenToRedis(authToken, user.id);
             res.cookie('AuthToken', authToken);
             res.redirect('/');
         } else {
