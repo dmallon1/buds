@@ -180,6 +180,9 @@ express()
     .use((req, res, next) => {
         const authToken = req.cookies['AuthToken'];
         req.user = authTokens[authToken];
+        console.log("User trying to get in");
+        console.log("auth token in cookie: " + authToken);
+        console.log("userId " + req.user);
         if (req.user) {
             next();
         } else {
