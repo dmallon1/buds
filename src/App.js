@@ -88,29 +88,30 @@ class App extends React.Component {
 
   firstPage() {
     return (
-    <div>
+    <div style={{color: "white", fontFamily: "Tahoma"}}> 
         <p>
-          Good morning, Michelle. How are you feeling today?
+          <br/>
+          Good morning, Michelle. <br/> How are you feeling today?
         </p>
 
-        <button onClick={() => this.selectemotion('Angry')} className="button1" style={{backgroundColor: this.state.clickedEmotion === null || this.state.clickedEmotion === 'Angry' ? "#e6fff9" : "#d9d9d9", color: this.state.clickedEmotion === null || this.state.clickedEmotion === 'Angry' ? "black" : "white"}} type="button">Angry</button><br/>
-        <button onClick={() => this.selectemotion('Bad')} className="button1" style={{backgroundColor: this.state.clickedEmotion === null || this.state.clickedEmotion === 'Bad' ? "#b3ffec" : "#d9d9d9", color: this.state.clickedEmotion === null || this.state.clickedEmotion === 'Bad' ? "black" : "white"}} type="button">Bad</button><br/>
-        <button onClick={() => this.selectemotion('Disgusted')} className="button1" style={{backgroundColor: this.state.clickedEmotion === null || this.state.clickedEmotion === 'Disgusted' ? "#80ffe5" : "#d9d9d9", color: this.state.clickedEmotion === null || this.state.clickedEmotion === 'Disgusted' ? "black" : "white"}} type="button">Disgusted</button><br/>
-        <button onClick={() => this.selectemotion('Fearful')} className="button1" style={{backgroundColor: this.state.clickedEmotion === null || this.state.clickedEmotion === 'Fearful' ? "#4dffd2" : "#d9d9d9", color: this.state.clickedEmotion === null || this.state.clickedEmotion === 'Fearful' ? "black" : "white"}} type="button">Fearful</button><br/>
-        <button onClick={() => this.selectemotion('Happy')} className="button1" style={{backgroundColor: this.state.clickedEmotion === null || this.state.clickedEmotion === 'Happy' ? "#00e6ac" : "#d9d9d9"}} type="button">Happy</button><br/>
-        <button onClick={() => this.selectemotion('Sad')} className="button1" style={{backgroundColor: this.state.clickedEmotion === null || this.state.clickedEmotion === 'Sad' ? "#00cc99" : "#d9d9d9"}} type="button">Sad</button><br/>
-        <button onClick={() => this.selectemotion('Surprised')} className="button1" style={{backgroundColor: this.state.clickedEmotion === null || this.state.clickedEmotion === 'Surprised' ? "#009973" : "#d9d9d9"}} type="button">Surprised</button><br/>
-        <button onClick={() => this.selectemotion('Indifferent')} className="button1" style={{backgroundColor: this.state.clickedEmotion === null || this.state.clickedEmotion === 'Indifferent' ? "#00664d" : "#d9d9d9"}} type="button">Indifferent</button><br/>
-
+        <button onClick={() => this.selectemotion('Angry')} className="button1" style={{backgroundColor: this.state.clickedEmotion === null || this.state.clickedEmotion === 'Angry' ? "#b3e6c8" : "#d9d9d9"}} type="button">Angry</button><br/>
+        <button onClick={() => this.selectemotion('Bad')} className="button1" style={{backgroundColor: this.state.clickedEmotion === null || this.state.clickedEmotion === 'Bad' ? "#b3e6c8" : "#d9d9d9"}} type="button">Bad</button><br/>
+        <button onClick={() => this.selectemotion('Disgusted')} className="button1" style={{backgroundColor: this.state.clickedEmotion === null || this.state.clickedEmotion === 'Disgusted' ? "#b3e6c8" : "#d9d9d9"}} type="button">Disgusted</button><br/>
+        <button onClick={() => this.selectemotion('Fearful')} className="button1" style={{backgroundColor: this.state.clickedEmotion === null || this.state.clickedEmotion === 'Fearful' ? "#b3e6c8" : "#d9d9d9"}} type="button">Fearful</button><br/>
+        <button onClick={() => this.selectemotion('Happy')} className="button1" style={{backgroundColor: this.state.clickedEmotion === null || this.state.clickedEmotion === 'Happy' ? "#b3e6c8" : "#d9d9d9"}} type="button">Happy</button><br/>
+        <button onClick={() => this.selectemotion('Indifferent')} className="button1" style={{backgroundColor: this.state.clickedEmotion === null || this.state.clickedEmotion === 'Indifferent' ? "#b3e6c8" : "#d9d9d9"}} type="button">Indifferent</button><br/>
+        <button onClick={() => this.selectemotion('Sad')} className="button1" style={{backgroundColor: this.state.clickedEmotion === null || this.state.clickedEmotion === 'Sad' ? "#b3e6c8" : "#d9d9d9"}} type="button">Sad</button><br/>
+        <button onClick={() => this.selectemotion('Surprised')} className="button1" style={{backgroundColor: this.state.clickedEmotion === null || this.state.clickedEmotion === 'Surprised' ? "#b3e6c8" : "#d9d9d9"}} type="button">Surprised</button><br/>
+        <p/>
         <p>
-        On a scale of 1 to 5, how intensely did you feel that?
+        On a scale of 1 to 5, <br/> how intensely did you feel that?
         </p>
         <button onClick={() => this.selectemotion(1)} className="button2" style={{backgroundColor: this.state.clickedIntensity === null || this.state.clickedIntensity === 1 ? "#e6fff9": "#d9d9d9"}} type="button">1</button>
         <button onClick={() => this.selectemotion(2)} className="button2" style={{backgroundColor: this.state.clickedIntensity === null || this.state.clickedIntensity === 2 ? "#b3ffec" : "#d9d9d9"}} type="button">2</button>
         <button onClick={() => this.selectemotion(3)} className="button2" style={{backgroundColor: this.state.clickedIntensity === null || this.state.clickedIntensity === 3 ? "#80ffe5" : "#d9d9d9"}} type="button">3</button>
         <button onClick={() => this.selectemotion(4)} className="button2" style={{backgroundColor: this.state.clickedIntensity === null || this.state.clickedIntensity === 4 ? "#4dffd2" : "#d9d9d9"}} type="button">4</button>
         <button onClick={() => this.selectemotion(5)} className="button2" style={{backgroundColor: this.state.clickedIntensity === null || this.state.clickedIntensity === 5 ? "#00e6ac" : "#d9d9d9"}} type="button">5</button>
-
+       <p/>
        <p>
         <button onClick={() => this.selectDone()} className="button3" style={{backgroundColor: "#d9d9d9"}} type="button">Done</button>
        </p>
@@ -164,6 +165,7 @@ class App extends React.Component {
         {this.state.currentPage === 1 && this.firstPage()}
         {this.state.currentPage === 2 && this.secondPage()}
         {this.state.currentPage === 3 && this.thirdPage(this.state.entries)}
+        <div className="m-5" style={{height:"200px"}}></div>
       </div>
     );
   }
