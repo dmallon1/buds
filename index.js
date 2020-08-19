@@ -62,14 +62,15 @@ const getEntries = (req, res) => {
 }
 
 const createEntry = (req, res) => {
-    if (!req.user) {
-        return res.status(400).send("not logged in");
-    }
     const {emotion, intensity, entry} = req.body;
+    if (entry === '') {
+        res.status(400).send({result: "empty entry"});
+        return;
+    }
     pool.query('INSERT INTO entries (emotion, intensity, entry, user_id) VALUES ($1, $2, $3, $4)',
             [emotion, intensity, entry, req.user], (error, results) => {
         if (error) {
-            res.status(400).send("error");
+            res.status(400).send({result: "error"});
             throw error
         }
         res.status(201).send({result: `Added ${results.rowCount} row(s)`});
