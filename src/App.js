@@ -63,7 +63,6 @@ class App extends React.Component {
       }
       this.postData(URL, payload)
         .then(data => {
-          console.log(data); // JSON data parsed by `data.json()` call
           this.refreshData()
         });
     }
@@ -86,7 +85,7 @@ class App extends React.Component {
       </div>
     )
   }
-  
+
   firstPage() {
     return (
     <div>
