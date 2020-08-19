@@ -6,8 +6,33 @@ const { Pool } = require('pg');
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser');
 const crypto = require('crypto');
+const redis = require("redis");
+const client = redis.createClient(process.env.REDIS_URL);
+
+client.on("error", function(error) {
+  console.error(error);
+});
 
 const authTokens = {};
+
+client.lrange('auth_tokens', 0, -1, (err, token_keys) => {
+    if (err) throw err;
+    client.mget(token_keys, (err, userIds) => {
+        if (err) throw err;
+        userIds.forEach((userId, i) => {
+            authTokens[token_keys[i]] = userId;
+        });
+    });
+});
+
+const writeNewTokenToRedis = (token, userId) => {
+    client.lpush('auth_tokens', token, (err, res) => {
+        if (err) console.log(err);
+    });
+    client.set(token, userId, (err, res) => {
+        if (err) console.log(err);
+    });
+};
 
 const getHashedPassword = (password) => {
     const sha256 = crypto.createHash('sha256');
@@ -91,7 +116,7 @@ const getUserOrNull = (email, password) => {
 };
 
 const doRegister = (req, res) => {
-    const { email, firstName, lastName, password, confirmPassword } = req.body;
+    const { email, firstName, password, confirmPassword } = req.body;
 
     if (password === confirmPassword) {
         getUserOrNull(email).then(user => {
@@ -103,9 +128,11 @@ const doRegister = (req, res) => {
                 return;
             } else {
                 const hashedPassword = getHashedPassword(password);
+                const authToken = generateAuthToken();
                 writeNewUserToDB(email, firstName, hashedPassword).then(dbResult => {
-                    const authToken = generateAuthToken();
-                    authTokens[authToken] = email;
+                    const userId = dbResult.rows[0].id;
+                    authTokens[authToken] = userId;
+                    writeNewTokenToRedis(authToken, userId);
                     res.cookie('AuthToken', authToken);
                     res.redirect('/');
                 });
@@ -120,11 +147,9 @@ const doRegister = (req, res) => {
 };
 
 const writeNewUserToDB = (email, firstName, hashedPassword) => {
-    return pool.query('INSERT INTO users (email, first_name, password) VALUES ($1, $2, $3)',
+    return pool.query('INSERT INTO users (email, first_name, password) VALUES ($1, $2, $3) RETURNING *',
             [email, firstName, hashedPassword])
-        .then(res => {
-            return true;
-        })
+        .then(res => res)
         .catch(err =>
             setImmediate(() => {
                 throw err;
