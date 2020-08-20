@@ -71,7 +71,7 @@ class App extends React.Component {
         intensity: this.state.clickedIntensity,
         entry: this.state.writtenText
       }
-      this.postData(URL, payload)
+      this.postData(`${URL}/entries`, payload)
         .then(data => {
           this.refreshData()
         });
