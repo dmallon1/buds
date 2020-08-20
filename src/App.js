@@ -11,7 +11,7 @@ class App extends React.Component {
     this.state = {
       clickedEmotion: null,
       clickedIntensity: null,
-      currentPage: 3,
+      currentPage: 1,
       writtenText: "",
       entries: null,
     };
@@ -37,7 +37,10 @@ class App extends React.Component {
   refreshData() {
     fetch(URL).then(r => r.json().then(data => {
       this.setState({
-        entries: data.results
+        entries: data.results,
+        clickedEmotion: null,
+        clickedIntensity: null,
+        writtenText: "",
       })
     }));
   }
@@ -121,7 +124,7 @@ class App extends React.Component {
 
   secondPage() {
     return (
-      <div>
+      <div style={{color: "white", fontFamily: "Tahoma"}}>
         <p>
         Write about what made you feel {this.state.clickedEmotion} of intensity level {this.state.clickedIntensity} today:
         </p>
@@ -138,21 +141,28 @@ class App extends React.Component {
   */
   thirdPage(entries) {
     if (entries === null || entries.length === 0) {
-      return "Journal Log empty";
+      return (
+        <div style={{color: "white", fontFamily: "Tahoma"}}>  
+          Journal Log empty
+        </div> );
     } else {
       return(
-        <div>
+        <div style={{color: "white", fontFamily: "Tahoma"}}>
           <p>
           Journal Log
           </p>
-          {entries.map((entry, i) =>
-            <div key={i}>
-              {entry.new_created} - {entry.emotion}
-                <div style={{border:"2px solid black", height:"100px", width: "400px", margin: "auto"}}>
+          {entries.map((entry, i) => {
+            const modifiedDate = entry.new_created;
+            const finalDate = new Date(modifiedDate).toLocaleDateString()
+            return (
+              <div key={i} className="my-3">
+                {finalDate} - {entry.emotion}
+                <div className="p-2" style={{border:"2px solid white", height:"100px", width: "400px", margin: "auto", textAlign: "justify"}}>
                   {entry.entry}
                 </div>
-            </div>
-          )}
+              </div>
+            )
+          })}
         </div>
       )
     }
