@@ -16,6 +16,7 @@ class App extends React.Component {
       writtenText: "",
       entries: null,
     };
+    this.timeOfDay = "Good morning"; //TODO: do this programtically
   }
 
   navigationBar() {
@@ -101,7 +102,7 @@ class App extends React.Component {
     <div style={{color: "white", fontFamily: "Tahoma"}}> 
         <p>
           <br/>
-          Good morning, {this.state.firstName}. <br/> How are you feeling today?
+          {this.timeOfDay}, {this.state.firstName}. <br/> How are you feeling today?
         </p>
 
         <button onClick={() => this.selectemotion('Angry')} className="button1" style={{backgroundColor: this.state.clickedEmotion === null || this.state.clickedEmotion === 'Angry' ? "#b3e6c8" : "#d9d9d9"}} type="button">Angry</button><br/>
@@ -149,7 +150,7 @@ class App extends React.Component {
   thirdPage(entries) {
     if (entries === null || entries.length === 0) {
       return (
-        <div style={{color: "white", fontFamily: "Tahoma"}}>  
+        <div style={{color: "white", fontFamily: "Tahoma"}}>
           Journal Log empty
         </div> );
     } else {
@@ -179,9 +180,13 @@ class App extends React.Component {
     return (
       <div className="App">
         {this.navigationBar()}
-        {this.state.currentPage === 1 && this.firstPage()}
-        {this.state.currentPage === 2 && this.secondPage()}
-        {this.state.currentPage === 3 && this.thirdPage(this.state.entries)}
+        {this.state.firstName &&
+            <div>
+                {this.state.currentPage === 1 && this.firstPage()}
+                {this.state.currentPage === 2 && this.secondPage()}
+                {this.state.currentPage === 3 && this.thirdPage(this.state.entries)}
+            </div>
+        }
         <div className="m-5" style={{height:"200px"}}></div>
       </div>
     );
