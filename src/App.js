@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
-const PROD_URL = "https://guarded-depths-61972.herokuapp.com/entries"
-const LOCAL_URL = "http://localhost:5000/entries"
+const PROD_URL = "https://guarded-depths-61972.herokuapp.com"
+const LOCAL_URL = "http://localhost:5000"
 const URL = process.env.REACT_APP_IS_LOCAL === "1" ? LOCAL_URL : PROD_URL;
 
 
@@ -12,6 +12,7 @@ class App extends React.Component {
       clickedEmotion: null,
       clickedIntensity: null,
       currentPage: 1,
+      firstName: "",
       writtenText: "",
       entries: null,
     };
@@ -35,14 +36,20 @@ class App extends React.Component {
   }
 
   refreshData() {
-    fetch(URL).then(r => r.json().then(data => {
-      this.setState({
-        entries: data.results,
-        clickedEmotion: null,
-        clickedIntensity: null,
-        writtenText: "",
-      })
-    }));
+    const urls = [
+        `${URL}/users`,
+        `${URL}/entries`
+    ];
+    const promises = urls.map(url => fetch(url).then(res => res.json()));
+    Promise.all(promises).then(data =>
+        this.setState({
+            firstName: data[0].first_name,
+            entries: data[1].results,
+            clickedEmotion: null,
+            clickedIntensity: null,
+            writtenText: "",
+        })
+    );
   }
 
   selectemotion(emotion) {
@@ -94,7 +101,7 @@ class App extends React.Component {
     <div style={{color: "white", fontFamily: "Tahoma"}}> 
         <p>
           <br/>
-          Good morning, Michelle. <br/> How are you feeling today?
+          Good morning, {this.state.firstName}. <br/> How are you feeling today?
         </p>
 
         <button onClick={() => this.selectemotion('Angry')} className="button1" style={{backgroundColor: this.state.clickedEmotion === null || this.state.clickedEmotion === 'Angry' ? "#b3e6c8" : "#d9d9d9"}} type="button">Angry</button><br/>
