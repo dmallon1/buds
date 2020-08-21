@@ -168,6 +168,8 @@ const writeNewUserToDB = (email, firstName, hashedPassword) => {
 const validateUser = (req, res, next) => {
     const authToken = req.cookies['AuthToken'];
     req.user = authTokens[authToken];
+    console.log('token: ' + authToken);
+    console.log('user: ' + req.user);
     if (req.user) {
         next();
     } else {
