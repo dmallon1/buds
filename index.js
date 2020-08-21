@@ -195,4 +195,4 @@ express()
     .get('/entries', getEntries)
     .post('/entries', createEntry)
     .get('/users', getCurrentUserName)
-    .listen(PORT, () => console.log(`Listening on ${ PORT }`))
+    .listen(PORT, () => console.log(`Listening on ${ PORT }`));
