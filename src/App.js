@@ -16,7 +16,7 @@ class App extends React.Component {
       writtenText: "",
       entries: null,
     };
-    this.timeOfDay = "Good morning"; //TODO: do this programtically
+    this.timeOfDay = this.getTimeOfDay();
   }
 
   navigationBar() {
@@ -30,6 +30,18 @@ class App extends React.Component {
           </div>
         </div>
     )
+  }
+
+  getTimeOfDay() {
+    const d = new Date();
+    const n = d.getHours();
+    if (n >= 5 && n < 12) {
+        return "morning"
+    } else if (n >= 12 && n < 17) {
+        return "afternoon"
+    } else {
+        return "evening"
+    }
   }
 
   componentDidMount() {
@@ -66,7 +78,7 @@ class App extends React.Component {
   }
 
   selectDone() {
-    if ( this.state.currentPage === 2) {
+    if (this.state.currentPage === 2) {
       const payload = {
         emotion: this.state.clickedEmotion,
         intensity: this.state.clickedIntensity,
@@ -102,7 +114,7 @@ class App extends React.Component {
     <div style={{color: "white", fontFamily: "Tahoma"}}> 
         <p>
           <br/>
-          {this.timeOfDay}, {this.state.firstName}. <br/> How are you feeling today?
+          Good {this.timeOfDay}, {this.state.firstName}. <br/> How are you feeling today?
         </p>
 
         <button onClick={() => this.selectemotion('Angry')} className="button1" style={{backgroundColor: this.state.clickedEmotion === null || this.state.clickedEmotion === 'Angry' ? "#b3e6c8" : "#d9d9d9"}} type="button">Angry</button><br/>
