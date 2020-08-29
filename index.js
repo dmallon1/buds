@@ -52,7 +52,7 @@ const pool = new Pool({
 });
 
 const getEntries = (req, res) => {
-    pool.query('SELECT * FROM entries WHERE user_id = $1', [req.user], (error, results) => {
+    pool.query('SELECT * FROM entries WHERE user_id = $1 ORDER BY id DESC', [req.user], (error, results) => {
         if (error) {
             throw error
         }
@@ -186,10 +186,7 @@ express()
         if (req.user) {
             next();
         } else {
-            res.render('login', {
-                message: 'Please login to continue',
-                messageClass: 'alert-danger'
-            });
+            res.render('login');
         }
     })
     .use(express.static(path.join(__dirname, 'build')))

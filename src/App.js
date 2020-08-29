@@ -91,7 +91,7 @@ class App extends React.Component {
 
   firstPage() {
     return (
-    <div style={{color: "white", fontFamily: "Tahoma"}}> 
+    <div style={{color: "white"}}> 
         <p>
           <br/>
           Good morning, Michelle. <br/> How are you feeling today?
@@ -124,7 +124,7 @@ class App extends React.Component {
 
   secondPage() {
     return (
-      <div style={{color: "white", fontFamily: "Tahoma"}}>
+      <div style={{color: "white"}}>
         <p>
         Write about what made you feel {this.state.clickedEmotion} of intensity level {this.state.clickedIntensity} today:
         </p>
@@ -142,22 +142,19 @@ class App extends React.Component {
   thirdPage(entries) {
     if (entries === null || entries.length === 0) {
       return (
-        <div style={{color: "white", fontFamily: "Tahoma"}}>  
+        <div style={{color: "white"}}>  
           Journal Log empty
         </div> );
     } else {
       return(
-        <div style={{color: "white", fontFamily: "Tahoma"}}>
-          <p>
-          Journal Log
-          </p>
+        <div style={{color: "white"}}>
           {entries.map((entry, i) => {
             const modifiedDate = entry.new_created;
             const finalDate = new Date(modifiedDate).toLocaleDateString()
             return (
               <div key={i} className="my-3">
-                {finalDate} - {entry.emotion}
-                <div className="p-2" style={{border:"2px solid white", height:"100px", width: "400px", margin: "auto", textAlign: "justify"}}>
+                {finalDate} - {entry.emotion} ({entry.intensity})
+                <div className="p-2" style={{border:"2px solid white", minHeight:"100px", width: "400px", margin: "auto", textAlign: "justify"}}>
                   {entry.entry}
                 </div>
               </div>
@@ -175,7 +172,7 @@ class App extends React.Component {
         {this.state.currentPage === 1 && this.firstPage()}
         {this.state.currentPage === 2 && this.secondPage()}
         {this.state.currentPage === 3 && this.thirdPage(this.state.entries)}
-        <div className="m-5" style={{height:"200px"}}></div>
+        <div style={{height:"150px"}}></div>
       </div>
     );
   }
