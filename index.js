@@ -165,6 +165,18 @@ const writeNewUserToDB = (email, firstName, hashedPassword) => {
         );
 };
 
+const validateUser = (req, res, next) => {
+    const authToken = req.cookies['AuthToken'];
+    req.user = authTokens[authToken];
+    console.log('token: ' + authToken);
+    console.log('user: ' + req.user);
+    if (req.user) {
+        next();
+    } else {
+        res.render('login');
+    }
+}
+
 express()
     .engine('hbs', exphbs({
         extname: '.hbs'
@@ -177,20 +189,9 @@ express()
     .post('/login', doLogin)
     .get('/register', (req, res) => res.render('register'))
     .post('/register', doRegister)
-    .use((req, res, next) => {
-        const authToken = req.cookies['AuthToken'];
-        req.user = authTokens[authToken];
-        console.log("User trying to get in");
-        console.log("auth token in cookie: " + authToken);
-        console.log("userId " + req.user);
-        if (req.user) {
-            next();
-        } else {
-            res.render('login');
-        }
-    })
+    .use((req, res, next) => validateUser(req, res, next))
     .use(express.static(path.join(__dirname, 'build')))
     .get('/entries', getEntries)
     .post('/entries', createEntry)
     .get('/users', getCurrentUserName)
-    .listen(PORT, () => console.log(`Listening on ${ PORT }`))
+    .listen(PORT, () => console.log(`Listening on ${ PORT }`));
