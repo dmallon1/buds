@@ -111,7 +111,7 @@ class App extends React.Component {
 
   firstPage() {
     return (
-    <div style={{color: "white"}}> 
+    <div style={{color: "white"}}>
         <p>
           <br/>
           Good {this.timeOfDay}, {this.state.firstName}. <br/> How are you feeling today?
@@ -136,7 +136,7 @@ class App extends React.Component {
         <button onClick={() => this.selectemotion(5)} className="button2" style={{backgroundColor: this.state.clickedIntensity === null || this.state.clickedIntensity === 5 ? "#00e6ac" : "#d9d9d9"}} type="button">5</button>
        <p/>
        <p>
-        <button onClick={() => this.selectDone()} className="button3" style={{backgroundColor: "#d9d9d9"}} type="button">Done</button>
+        <button onClick={() => this.selectDone()} className="button3" style={{backgroundColor: "#80ffe5"}} type="button" disabled={!(this.state.clickedEmotion && this.state.clickedIntensity)}>Done</button>
        </p>
       </div>
     );
@@ -151,7 +151,7 @@ class App extends React.Component {
         <label>
           <textarea type="text" value={this.state.writtenText} onChange={(e) => this.handleChange(e)} rows="10" cols="45"/>
         </label> <br/>
-        <button onClick={() => this.selectDone()} className="button3" style={{backgroundColor: "#d9d9d9"}} type="button">Done</button>
+        <button onClick={() => this.selectDone()} className="button3" style={{backgroundColor: "#80ffe5"}} type="button" disabled={!this.state.writtenText}>Done</button>
       </div>
     );
   }
