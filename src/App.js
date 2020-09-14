@@ -1,5 +1,6 @@
 import React from 'react';
 import './App.css';
+import {NameForm} from './Auth.js';
 const PROD_URL = "https://guarded-depths-61972.herokuapp.com"
 const LOCAL_URL = "http://localhost:5000"
 const URL = process.env.REACT_APP_IS_LOCAL === "1" ? LOCAL_URL : PROD_URL;
@@ -15,6 +16,7 @@ class App extends React.Component {
       firstName: "",
       writtenText: "",
       entries: null,
+      authToken: localStorage.getItem('authToken'),
     };
     this.timeOfDay = this.getTimeOfDay();
   }
@@ -45,7 +47,9 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    this.refreshData()
+    if (this.state.authToken) {
+        this.refreshData();
+    }
   }
 
   refreshData() {
@@ -54,15 +58,20 @@ class App extends React.Component {
         `${URL}/entries`
     ];
     const promises = urls.map(url => fetch(url).then(res => res.json()));
-    Promise.all(promises).then(data =>
-        this.setState({
-            firstName: data[0].first_name,
-            entries: data[1].results,
-            clickedEmotion: null,
-            clickedIntensity: null,
-            writtenText: "",
-        })
-    );
+    Promise.all(promises).then(data => {
+        if (data[0].msg) {
+            this.setState({authToken: null});
+        } else {
+            this.setState({
+                firstName: data[0].first_name,
+                entries: data[1].results,
+                clickedEmotion: null,
+                clickedIntensity: null,
+                writtenText: "",
+                authToken: localStorage.getItem('authToken'),
+            });
+        }
+    });
   }
 
   selectemotion(emotion) {
@@ -188,13 +197,16 @@ class App extends React.Component {
   render() {
     return (
       <div className="App">
-        {this.navigationBar()}
         {this.state.firstName &&
             <div>
+                {this.navigationBar()}
                 {this.state.currentPage === 1 && this.firstPage()}
                 {this.state.currentPage === 2 && this.secondPage()}
                 {this.state.currentPage === 3 && this.thirdPage(this.state.entries)}
             </div>
+        }
+        {!this.state.authToken &&
+            <NameForm url={URL} refresh={() => this.refreshData()}/>
         }
         <div style={{height:"150px"}}></div>
       </div>

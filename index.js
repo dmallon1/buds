@@ -1,5 +1,4 @@
 const express = require('express')
-const exphbs = require('express-handlebars');
 const path = require('path')
 const PORT = process.env.PORT || 5000
 const { Pool } = require('pg');
@@ -95,13 +94,10 @@ const doLogin = (req, res) => {
             authTokens[authToken] = user.id;
             writeNewTokenToRedis(authToken, user.id);
             res.cookie('AuthToken', authToken);
-            res.redirect('/');
+            res.status(200).send({token: authToken});
         } else {
             res.cookie('AuthToken', null);
-            res.render('login', {
-                message: 'Invalid username or password',
-                messageClass: 'alert-danger'
-            });
+            res.status(400).send({msg: "invalid login"});
         }
     });
 }
@@ -129,28 +125,27 @@ const doRegister = (req, res) => {
     if (password === confirmPassword) {
         getUserOrNull(email).then(user => {
             if (user) {
-                res.render('register', {
-                    message: 'User already registered.',
-                    messageClass: 'alert-danger'
-                });
+                res.status(400).send({msg: "passwords do not match"});
                 return;
             } else {
                 const hashedPassword = getHashedPassword(password);
                 const authToken = generateAuthToken();
                 writeNewUserToDB(email, firstName, hashedPassword).then(dbResult => {
+                    console.log('this', dbResult);
                     const userId = dbResult.rows[0].id;
                     authTokens[authToken] = userId;
                     writeNewTokenToRedis(authToken, userId);
                     res.cookie('AuthToken', authToken);
-                    res.redirect('/');
+                    res.status(201).send({token: authToken});
+                }).catch(err => {
+                    console.log('baaar');
+                    console.log(err);
+                    res.status(400).send({msg: "user could not be created"});
                 });
             }
         })
     } else {
-        res.render('register', {
-            message: 'Password does not match.',
-            messageClass: 'alert-danger'
-        });
+        res.status(400).send({msg: "passwords do not match"});
     }
 };
 
@@ -158,39 +153,35 @@ const writeNewUserToDB = (email, firstName, hashedPassword) => {
     return pool.query('INSERT INTO users (email, first_name, password) VALUES ($1, $2, $3) RETURNING *',
             [email, firstName, hashedPassword])
         .then(res => res)
-        .catch(err =>
-            setImmediate(() => {
-                throw err;
-            })
-        );
+        .catch(err => {
+            throw err;
+        });
 };
 
 const validateUser = (req, res, next) => {
-    const authToken = req.cookies['AuthToken'];
+    let authToken = req.cookies['AuthToken'];
+    const headerAuthString = req.headers.authorization;
+    if (headerAuthString) {
+        authToken = headerAuthString.split(" ")[1];
+    }
     req.user = authTokens[authToken];
     console.log('token: ' + authToken);
     console.log('user: ' + req.user);
     if (req.user) {
         next();
     } else {
-        res.render('login');
+        res.status(401).send({msg: "unauthorized"});
     }
 }
 
 express()
-    .engine('hbs', exphbs({
-        extname: '.hbs'
-    }))
-    .set('view engine', 'hbs')
     .use(cookieParser())
     .use(bodyParser.urlencoded({ extended: true }))
     .use(bodyParser.json())
-    .get('/login', (req, res) => res.render('login'))
     .post('/login', doLogin)
-    .get('/register', (req, res) => res.render('register'))
     .post('/register', doRegister)
-    .use((req, res, next) => validateUser(req, res, next))
     .use(express.static(path.join(__dirname, 'build')))
+    .use((req, res, next) => validateUser(req, res, next))
     .get('/entries', getEntries)
     .post('/entries', createEntry)
     .get('/users', getCurrentUserName)
