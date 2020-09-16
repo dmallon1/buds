@@ -155,8 +155,11 @@ const writeNewUserToDB = (email, firstName, hashedPassword) => {
 };
 
 const validateUser = (req, res, next) => {
+    let authToken;
     const headerAuthString = req.headers.authorization;
-    const authToken = headerAuthString.split(" ")[1];
+    if (headerAuthString) {
+        authToken = headerAuthString.split(" ")[1];
+    }
     req.user = authTokens[authToken];
     console.log('token: ' + authToken);
     console.log('user: ' + req.user);

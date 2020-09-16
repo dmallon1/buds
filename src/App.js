@@ -57,7 +57,13 @@ class App extends React.Component {
         `${URL}/users`,
         `${URL}/entries`
     ];
-    const promises = urls.map(url => fetch(url).then(res => res.json()));
+    const fetchProps = {
+        headers: {
+          'Authorization': `Bearer ${this.state.authToken}`,
+        }
+    };
+
+    const promises = urls.map(url => fetch(url, fetchProps).then(res => res.json()));
     Promise.all(promises).then(data => {
         if (data[0].msg) {
             this.setState({authToken: null});
@@ -68,7 +74,6 @@ class App extends React.Component {
                 clickedEmotion: null,
                 clickedIntensity: null,
                 writtenText: "",
-                authToken: localStorage.getItem('authToken'),
             });
         }
     });
@@ -206,11 +211,17 @@ class App extends React.Component {
             </div>
         }
         {!this.state.authToken &&
-            <NameForm url={URL} refresh={() => this.refreshData()}/>
+            <NameForm url={URL} refresh={() => this.refreshFunction()}/>
         }
         <div style={{height:"150px"}}></div>
       </div>
     );
+  }
+
+  refreshFunction() {
+    this.setState({
+        authToken: localStorage.getItem('authToken')},
+        () => this.refreshData());
   }
 
   postData(url = '', data = {}) {
@@ -221,8 +232,8 @@ class App extends React.Component {
       cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
       credentials: 'same-origin', // include, *same-origin, omit
       headers: {
-        'Content-Type': 'application/json'
-        // 'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${this.state.authToken}`,
       },
       redirect: 'follow', // manual, *follow, error
       referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
