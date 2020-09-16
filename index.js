@@ -3,7 +3,6 @@ const path = require('path')
 const PORT = process.env.PORT || 5000
 const { Pool } = require('pg');
 const bodyParser = require('body-parser')
-const cookieParser = require('cookie-parser');
 const crypto = require('crypto');
 const redis = require("redis");
 const client = redis.createClient(process.env.REDIS_URL);
@@ -93,10 +92,8 @@ const doLogin = (req, res) => {
 
             authTokens[authToken] = user.id;
             writeNewTokenToRedis(authToken, user.id);
-            res.cookie('AuthToken', authToken);
             res.status(200).send({token: authToken});
         } else {
-            res.cookie('AuthToken', null);
             res.status(400).send({msg: "invalid login"});
         }
     });
@@ -135,7 +132,6 @@ const doRegister = (req, res) => {
                     const userId = dbResult.rows[0].id;
                     authTokens[authToken] = userId;
                     writeNewTokenToRedis(authToken, userId);
-                    res.cookie('AuthToken', authToken);
                     res.status(201).send({token: authToken});
                 }).catch(err => {
                     console.log('baaar');
@@ -159,11 +155,8 @@ const writeNewUserToDB = (email, firstName, hashedPassword) => {
 };
 
 const validateUser = (req, res, next) => {
-    let authToken = req.cookies['AuthToken'];
     const headerAuthString = req.headers.authorization;
-    if (headerAuthString) {
-        authToken = headerAuthString.split(" ")[1];
-    }
+    const authToken = headerAuthString.split(" ")[1];
     req.user = authTokens[authToken];
     console.log('token: ' + authToken);
     console.log('user: ' + req.user);
@@ -175,7 +168,6 @@ const validateUser = (req, res, next) => {
 }
 
 express()
-    .use(cookieParser())
     .use(bodyParser.urlencoded({ extended: true }))
     .use(bodyParser.json())
     .post('/login', doLogin)
