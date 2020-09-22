@@ -23,11 +23,11 @@ class App extends React.Component {
 
   navigationBar() {
     return (
-        <div className="row align-items-center" style={{cursor: "pointer", backgroundColor: "#d9d9d9", border:"2px solid black", height:"40px"}}>
-          <div onClick={() => this.setState({currentPage: 1})} className="col" style={{fontWeight: this.state.currentPage !== 3 ? "bold" : "" }}>
+        <div className="row align-items-center" style={{backgroundColor: "#d9d9d9", border:"2px solid black", height:"40px"}}>
+          <div onClick={() => this.setState({currentPage: 1})} className="col" style={{cursor: "pointer", fontWeight: this.state.currentPage !== 3 ? "bold" : "" }}>
           Today's Feeling
           </div>
-          <div onClick={() => this.setState({currentPage: 3})} className="col" style={{fontWeight: this.state.currentPage === 3 ? "bold" : "" }}>
+          <div onClick={() => this.setState({currentPage: 3})} className="col" style={{cursor: "pointer", fontWeight: this.state.currentPage === 3 ? "bold" : "" }}>
           Journal Log
           </div>
         </div>
@@ -150,7 +150,9 @@ class App extends React.Component {
         <button onClick={() => this.selectemotion(5)} className="button2" style={{backgroundColor: this.state.clickedIntensity === null || this.state.clickedIntensity === 5 ? "#00e6ac" : "#d9d9d9"}} type="button">5</button>
        <p/>
        <p>
-        <button onClick={() => this.selectDone()} className="button3" style={{backgroundColor: "#80ffe5"}} type="button" disabled={!(this.state.clickedEmotion && this.state.clickedIntensity)}>Done</button>
+        <button onClick={() => this.selectDone()} className="button3" style={{backgroundColor: "#80ffe5"}} type="button" disabled={!(this.state.clickedEmotion && this.state.clickedIntensity)}>
+            Continue
+        </button>
        </p>
       </div>
     );
@@ -177,16 +179,18 @@ class App extends React.Component {
     if (entries === null || entries.length === 0) {
       return (
         <div style={{color: "white", fontFamily: "Tahoma"}}>
+          <br/>
           Journal Log empty
         </div> );
     } else {
       return(
         <div style={{color: "white"}}>
+          <br/>
           {entries.map((entry, i) => {
             const modifiedDate = entry.new_created;
             const finalDate = new Date(modifiedDate).toLocaleDateString()
             return (
-              <div key={i} className="my-3">
+              <div key={i} className={i !== 0 ? "my-3" : ""}>
                 {finalDate} - {entry.emotion} ({entry.intensity})
                 <div className="p-2" style={{border:"2px solid white", minHeight:"100px", width: "400px", margin: "auto", textAlign: "justify"}}>
                   {entry.entry}

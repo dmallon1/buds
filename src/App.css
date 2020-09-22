@@ -48,7 +48,6 @@
   display: inline-block;
   margin: 2px 2px;
   cursor: pointer;
-  width: 48px;
   border-radius: 12px;
   font-size: 14px;
 }
@@ -62,7 +61,6 @@
   display: inline-block;
   margin: 2px 2px;
   cursor: pointer;
-  width: 80px;
   border-radius: 12px;
   font-size: 14px;
 }
