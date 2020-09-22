@@ -161,6 +161,7 @@ class App extends React.Component {
   secondPage() {
     return (
       <div style={{color: "white"}}>
+        <br/>
         <p>
         Write about what made you feel {this.state.clickedEmotion} of intensity level {this.state.clickedIntensity} today:
         </p>
