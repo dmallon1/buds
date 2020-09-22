@@ -128,13 +128,11 @@ const doRegister = (req, res) => {
                 const hashedPassword = getHashedPassword(password);
                 const authToken = generateAuthToken();
                 writeNewUserToDB(email, firstName, hashedPassword).then(dbResult => {
-                    console.log('this', dbResult);
                     const userId = dbResult.rows[0].id;
                     authTokens[authToken] = userId;
                     writeNewTokenToRedis(authToken, userId);
                     res.status(201).send({token: authToken});
                 }).catch(err => {
-                    console.log('baaar');
                     console.log(err);
                     res.status(400).send({msg: "user could not be created"});
                 });
@@ -173,9 +171,9 @@ const validateUser = (req, res, next) => {
 express()
     .use(bodyParser.urlencoded({ extended: true }))
     .use(bodyParser.json())
+    .use(express.static(path.join(__dirname, 'build')))
     .post('/login', doLogin)
     .post('/register', doRegister)
-    .use(express.static(path.join(__dirname, 'build')))
     .use((req, res, next) => validateUser(req, res, next))
     .get('/entries', getEntries)
     .post('/entries', createEntry)
